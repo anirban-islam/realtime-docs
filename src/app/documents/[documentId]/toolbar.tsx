@@ -1,6 +1,9 @@
 'use client'
-import {LucideIcon, Undo2Icon} from 'lucide-react'
+import {BoldIcon, ItalicIcon, LucideIcon, MessageSquarePlus, PrinterIcon, Redo2Icon, SpellCheckIcon, UnderlineIcon, Undo2Icon} from 'lucide-react'
 import { cn } from '../../../lib/utils';
+import { useEditorStore } from '@/store/use-editor-store';
+import { Separator } from '@/components/ui/separator';
+
 
 interface ToolbarButtonProps{
     onClick?:()=>void;
@@ -27,6 +30,7 @@ const ToolbarButton = ({
 }
 
 const Toolbar = () => {
+    const {editor}=useEditorStore();
     const section:{
         lable:string , 
         icon:LucideIcon ,
@@ -38,10 +42,67 @@ const Toolbar = () => {
                 lable:"Undo",
                 icon:Undo2Icon,
                 onClick:()=>{
-                    console.log("Undo Click")
+                    editor?.chain().focus().undo().run()
                 }
             },
-        
+             {
+                lable:"Redo",
+                icon:Redo2Icon,
+                onClick:()=>{
+                    editor?.chain().focus().redo().run()
+                }
+            },
+             {
+                lable:"Print",
+                icon:PrinterIcon,
+                onClick:()=>{
+                    window.print();
+                }
+            },
+             {
+                lable:"Spell Check",
+                icon:SpellCheckIcon,
+                onClick:()=>{
+                   const current = editor?.view.dom.getAttribute("spellcheck");
+                   editor?.view.dom.setAttribute("spellcheck", current==="false"?"true":"false");
+                }
+            },
+        ],
+        [
+            {
+                lable:"Bold",
+                icon:BoldIcon,
+                isActive:editor?.isActive("bold"),
+                onClick:()=>{
+                    editor?.chain().focus().toggleBold().run()
+                }
+            },
+            {
+                lable:"Italic",
+                icon:ItalicIcon,
+                isActive:editor?.isActive("italic"),
+                onClick:()=>{
+                    editor?.chain().focus().toggleItalic().run()
+                }
+            }, 
+            {
+                lable:"Underline",
+                icon:UnderlineIcon,
+                isActive:editor?.isActive("underline"),
+                onClick:()=>{
+                    editor?.chain().focus().toggleUnderline().run()
+                }
+            },
+            {
+                lable:"Comment",
+                icon:MessageSquarePlus,
+                isActive:false,
+                onClick:()=>{
+                    console.log("TO DO LATER")
+                }
+            },
+            
+            
         ]
     ]
     
@@ -50,6 +111,14 @@ const Toolbar = () => {
            {section[0].map((item)=>(
             <ToolbarButton key={item.lable} {...item}/>
            ))}
+           <Separator orientation='vertical' className='min-h-6 bg-neutral-300'/>
+           {section[1].map((item)=>(
+            <ToolbarButton key={item.lable} {...item}/>
+           ))}           
+           <Separator orientation='vertical' className='min-h-6 bg-neutral-300'/>
+           <Separator orientation='vertical' className='min-h-6 bg-neutral-300'/>
+           <Separator orientation='vertical' className='min-h-6 bg-neutral-300'/>
+           <Separator orientation='vertical' className='min-h-6 bg-neutral-300'/>
         </div>
     );
 }
