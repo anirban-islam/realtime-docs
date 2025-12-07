@@ -1,5 +1,5 @@
 'use client'
-import {BoldIcon, ItalicIcon, LucideIcon, MessageSquarePlus, PrinterIcon, Redo2Icon, SpellCheckIcon, UnderlineIcon, Undo2Icon} from 'lucide-react'
+import {BoldIcon, ItalicIcon, ListTodoIcon, LucideIcon, MessageSquarePlus, PrinterIcon, Redo2Icon, RemoveFormattingIcon, SpellCheckIcon, UnderlineIcon, Undo2Icon} from 'lucide-react'
 import { cn } from '../../../lib/utils';
 import { useEditorStore } from '@/store/use-editor-store';
 import { Separator } from '@/components/ui/separator';
@@ -101,7 +101,22 @@ const Toolbar = () => {
                     console.log("TO DO LATER")
                 }
             },
-            
+               {
+                lable:"List Todo",
+                icon:ListTodoIcon,
+                onClick:()=>{
+                   editor?.chain().focus().toggleTaskList().run()
+                },
+                isActive:editor?.isActive("tasklist"),
+            },
+               {
+                lable:"Remove Foemating",
+                icon:RemoveFormattingIcon,
+                isActive:false,
+                onClick:()=>{
+                    editor?.chain().focus().unsetAllMarks().run()
+                }
+            },
             
         ]
     ]
